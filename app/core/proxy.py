@@ -73,3 +73,6 @@ class DatabaseProxy:
     def read_log(self, user_id):
         self._authenticate_user(user_id)
         return UserLogger(user_id).read()
+
+    def read_all_users(self):
+        return self.users_db.read()
