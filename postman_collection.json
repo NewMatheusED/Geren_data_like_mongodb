@@ -1,0 +1,303 @@
+{
+  "info": {
+    "name": "Geren_data_like_mongodb",
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "description": "Collection completa para testar todos os endpoints da API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "manipulador_id",
+      "value": "",
+      "description": "Preencher com o user_id retornado ao criar um usuário manipulador",
+      "type": "string"
+    },
+    {
+      "key": "consumidor_id",
+      "value": "",
+      "description": "Preencher com o user_id retornado ao criar um usuário consumidor",
+      "type": "string"
+    },
+    {
+      "key": "doc_id",
+      "value": "",
+      "description": "Preencher com o id retornado ao inserir um documento",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Usuários",
+      "item": [
+        {
+          "name": "Criar usuário manipulador",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria\",\n  \"role\": \"manipulador\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            },
+            "description": "Cria um usuário com role 'manipulador' (pode inserir, ler, atualizar e deletar). Copie o user_id retornado e cole na variável {{manipulador_id}}."
+          }
+        },
+        {
+          "name": "Criar usuário consumidor",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João\",\n  \"role\": \"consumidor\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            },
+            "description": "Cria um usuário com role 'consumidor' (só pode ler). Copie o user_id retornado e cole na variável {{consumidor_id}}."
+          }
+        },
+        {
+          "name": "Criar usuário com role inválida (erro 400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Hacker\",\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            },
+            "description": "Deve retornar 400 — role 'admin' não é permitida."
+          }
+        },
+        {
+          "name": "Listar todos os usuários",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dados",
+      "item": [
+        {
+          "name": "Inserir documento (manipulador ✅)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-ID", "value": "{{manipulador_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Documento de Teste\",\n  \"categoria\": \"tecnologia\",\n  \"valor\": 42\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/data",
+              "host": ["{{base_url}}"],
+              "path": ["data"]
+            },
+            "description": "Insere um documento. Copie o id retornado e cole na variável {{doc_id}}."
+          }
+        },
+        {
+          "name": "Inserir documento (consumidor ❌ - acesso negado)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-ID", "value": "{{consumidor_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Tentativa proibida\",\n  \"categoria\": \"teste\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/data",
+              "host": ["{{base_url}}"],
+              "path": ["data"]
+            },
+            "description": "Deve retornar 403 — consumidor não pode inserir. A ação também é registrada no log do usuário."
+          }
+        },
+        {
+          "name": "Ler todos os documentos (manipulador ✅)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-User-ID", "value": "{{manipulador_id}}" }],
+            "url": {
+              "raw": "{{base_url}}/data",
+              "host": ["{{base_url}}"],
+              "path": ["data"]
+            }
+          }
+        },
+        {
+          "name": "Ler com filtro por query (manipulador ✅)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-User-ID", "value": "{{manipulador_id}}" }],
+            "url": {
+              "raw": "{{base_url}}/data?categoria=tecnologia",
+              "host": ["{{base_url}}"],
+              "path": ["data"],
+              "query": [{ "key": "categoria", "value": "tecnologia" }]
+            },
+            "description": "Usa o RegexORM para filtrar documentos. O valor 'tecnologia' é tratado como regex (case-insensitive)."
+          }
+        },
+        {
+          "name": "Ler todos os documentos (consumidor ✅)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-User-ID", "value": "{{consumidor_id}}" }],
+            "url": {
+              "raw": "{{base_url}}/data",
+              "host": ["{{base_url}}"],
+              "path": ["data"]
+            },
+            "description": "Consumidor tem permissão de leitura."
+          }
+        },
+        {
+          "name": "Atualizar documento (manipulador ✅)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-ID", "value": "{{manipulador_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Documento Atualizado\",\n  \"valor\": 99\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/data/{{doc_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["data", "{{doc_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar documento (consumidor ❌ - acesso negado)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-User-ID", "value": "{{consumidor_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Tentativa proibida\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/data/{{doc_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["data", "{{doc_id}}"]
+            },
+            "description": "Deve retornar 403 — consumidor não pode atualizar."
+          }
+        },
+        {
+          "name": "Deletar documento (manipulador ✅)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "X-User-ID", "value": "{{manipulador_id}}" }],
+            "url": {
+              "raw": "{{base_url}}/data/{{doc_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["data", "{{doc_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Deletar documento (consumidor ❌ - acesso negado)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "X-User-ID", "value": "{{consumidor_id}}" }],
+            "url": {
+              "raw": "{{base_url}}/data/{{doc_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["data", "{{doc_id}}"]
+            },
+            "description": "Deve retornar 403 — consumidor não pode deletar."
+          }
+        },
+        {
+          "name": "Requisição sem header X-User-ID (erro 403)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/data",
+              "host": ["{{base_url}}"],
+              "path": ["data"]
+            },
+            "description": "Deve retornar 403 — header obrigatório ausente."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Logs",
+      "item": [
+        {
+          "name": "Ver logs do manipulador",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/users/{{manipulador_id}}/logs",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{manipulador_id}}", "logs"]
+            },
+            "description": "Retorna todos os logs do usuário manipulador, incluindo o registro de criação e todas as ações realizadas."
+          }
+        },
+        {
+          "name": "Ver logs do consumidor",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/users/{{consumidor_id}}/logs",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{consumidor_id}}", "logs"]
+            },
+            "description": "Retorna todos os logs do consumidor, incluindo as tentativas negadas de insert, update e delete."
+          }
+        },
+        {
+          "name": "Ver logs de usuário inexistente (erro 403)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/users/id-que-nao-existe/logs",
+              "host": ["{{base_url}}"],
+              "path": ["users", "id-que-nao-existe", "logs"]
+            },
+            "description": "Deve retornar 403 — usuário não encontrado."
+          }
+        }
+      ]
+    }
+  ]
+}

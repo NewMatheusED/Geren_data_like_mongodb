@@ -1,7 +1,12 @@
 [
-  {
-    "nome": "Jo\u00e3o",
-    "role": "manipulador",
-    "_id": "bc119e4b-9994-45cc-b626-ce5d4043807f"
-  }
+    {
+        "nome": "Maria",
+        "role": "manipulador",
+        "_id": "4e2559c6-0204-44c4-8f9c-e205574ec52b"
+    },
+    {
+        "nome": "Jo\u00e3o",
+        "role": "consumidor",
+        "_id": "d04ce73c-c15c-4d13-ad71-0fe24ee14249"
+    }
 ]

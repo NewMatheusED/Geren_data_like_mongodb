@@ -3,6 +3,7 @@ from typing import Any
 
 from .database import MongoStyleDatabase
 from .factory import UserFactory
+from .logger import UserLogger
 from .proxy import DatabaseProxy
 
 
@@ -63,4 +64,15 @@ class RegisterUserCommand(Command):
         UserFactory.create_user("temp_id", self.role)
 
         user_data = {"nome": self.nome, "role": self.role.lower()}
-        return self.users_db.insert(user_data)
+        user_id = self.users_db.insert(user_data)
+        UserLogger(user_id).log("register", "success", nome=self.nome, role=self.role)
+        return user_id
+
+
+class ReadLogCommand(Command):
+    def __init__(self, user_id):
+        self.proxy = DatabaseProxy()
+        self.user_id = user_id
+
+    def execute(self):
+        return self.proxy.read_log(self.user_id)

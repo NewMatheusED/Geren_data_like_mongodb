@@ -1,5 +1,6 @@
 from .database import MongoStyleDatabase
 from .factory import UserFactory
+from .logger import UserLogger
 from .orm import RegexORM
 
 
@@ -25,22 +26,50 @@ class DatabaseProxy:
         )
 
     def insert(self, user_id, data):
-        user = self._authenticate_user(user_id)
-        self._check_permission(user, "insert")
-        return self.db.insert(data)
+        try:
+            user = self._authenticate_user(user_id)
+            self._check_permission(user, "insert")
+            doc_id = self.db.insert(data)
+            UserLogger(user_id).log("insert", "success", doc_id=doc_id)
+            return doc_id
+        except PermissionError as e:
+            UserLogger(user_id).log("insert", "denied", reason=str(e))
+            raise
 
     def read(self, user_id, query=None):
-        user = self._authenticate_user(user_id)
-        self._check_permission(user, "read")
-        all_data = self.db.read()
-        return RegexORM.find(all_data, query)
+        try:
+            user = self._authenticate_user(user_id)
+            self._check_permission(user, "read")
+            all_data = self.db.read()
+            result = RegexORM.find(all_data, query)
+            UserLogger(user_id).log("read", "success", query=query if query else "all")
+            return result
+        except PermissionError as e:
+            UserLogger(user_id).log("read", "denied", reason=str(e))
+            raise
 
     def update(self, user_id, doc_id, data):
-        user = self._authenticate_user(user_id)
-        self._check_permission(user, "update")
-        return self.db.update(doc_id, data)
+        try:
+            user = self._authenticate_user(user_id)
+            self._check_permission(user, "update")
+            result = self.db.update(doc_id, data)
+            UserLogger(user_id).log("update", "success", doc_id=doc_id)
+            return result
+        except PermissionError as e:
+            UserLogger(user_id).log("update", "denied", reason=str(e))
+            raise
 
     def delete(self, user_id, doc_id):
-        user = self._authenticate_user(user_id)
-        self._check_permission(user, "delete")
-        return self.db.delete(doc_id)
+        try:
+            user = self._authenticate_user(user_id)
+            self._check_permission(user, "delete")
+            result = self.db.delete(doc_id)
+            UserLogger(user_id).log("delete", "success", doc_id=doc_id)
+            return result
+        except PermissionError as e:
+            UserLogger(user_id).log("delete", "denied", reason=str(e))
+            raise
+
+    def read_log(self, user_id):
+        self._authenticate_user(user_id)
+        return UserLogger(user_id).read()

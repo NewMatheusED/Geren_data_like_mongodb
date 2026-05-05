@@ -1,9 +1,12 @@
+import json
+
 from flask import Blueprint, jsonify, request
 
 from app.core.commands import (
     DeleteCommand,
     InsertCommand,
     ReadCommand,
+    ReadLogCommand,
     RegisterUserCommand,
     UpdateCommand,
 )
@@ -40,6 +43,16 @@ def list_users():
     users_db = MongoStyleDatabase("app/data/users.json")
     users = users_db.read()
     return jsonify(users), 200
+
+
+@api_bp.route("/users/<user_id>/logs", methods=["GET"])
+def get_user_logs(user_id):
+    try:
+        command = ReadLogCommand(user_id)
+        logs = command.execute()
+        return jsonify(logs), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 403
 
 
 # dados
