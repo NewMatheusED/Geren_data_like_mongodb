@@ -77,6 +77,8 @@ def read_data():
         command = ReadCommand(user_id, query)
         result = command.execute()
         return jsonify(result), 200
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 403
 
