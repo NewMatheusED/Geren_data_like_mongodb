@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from app.core.commands import (
     DeleteCommand,
+    DeleteManyCommand,
     InsertCommand,
     ReadAllUsersCommand,
     ReadCommand,
@@ -93,6 +94,22 @@ def update_data(doc_id):
         if success:
             return jsonify({"message": "Documento atualizado"}), 200
         return jsonify({"error": "Documento não encontrado"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 403
+
+
+@api_bp.route("/data", methods=["DELETE"])
+def delete_data_by_query():
+    try:
+        user_id = get_user_id_from_headers()
+        query = request.args.to_dict() if request.args else None
+        if not query:
+            return jsonify(
+                {"error": "Informe ao menos um filtro para deletar em massa."}
+            ), 400
+        command = DeleteManyCommand(user_id, query)
+        deleted_count = command.execute()
+        return jsonify({"message": f"{deleted_count} documento(s) deletado(s)"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 403
 

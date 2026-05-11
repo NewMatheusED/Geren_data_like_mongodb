@@ -54,6 +54,16 @@ class DeleteCommand(Command):
         return self.proxy.delete(self.user_id, self.doc_id)
 
 
+class DeleteManyCommand(Command):
+    def __init__(self, user_id, query):
+        self.proxy = DatabaseProxy()
+        self.user_id = user_id
+        self.query = query
+
+    def execute(self):
+        return self.proxy.delete_many(self.user_id, self.query)
+
+
 class ReadAllUsersCommand(Command):
     def __init__(self):
         self.proxy = DatabaseProxy()

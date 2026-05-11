@@ -220,7 +220,48 @@
           }
         },
         {
-          "name": "Deletar documento (manipulador ✅)",
+          "name": "Deletar documentos por query em massa (manipulador ✅)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "X-User-ID", "value": "{{manipulador_id}}" }],
+            "url": {
+              "raw": "{{base_url}}/data?categoria=tecnologia",
+              "host": ["{{base_url}}"],
+              "path": ["data"],
+              "query": [{ "key": "categoria", "value": "tecnologia" }]
+            },
+            "description": "Deleta em massa todos os documentos que casarem com o filtro regex. Retorna quantos foram deletados."
+          }
+        },
+        {
+          "name": "Deletar por query sem filtro (erro 400)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "X-User-ID", "value": "{{manipulador_id}}" }],
+            "url": {
+              "raw": "{{base_url}}/data",
+              "host": ["{{base_url}}"],
+              "path": ["data"]
+            },
+            "description": "Deve retornar 400 — delete em massa sem filtro é bloqueado por segurança."
+          }
+        },
+        {
+          "name": "Deletar por query (consumidor ❌ - acesso negado)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "X-User-ID", "value": "{{consumidor_id}}" }],
+            "url": {
+              "raw": "{{base_url}}/data?categoria=tecnologia",
+              "host": ["{{base_url}}"],
+              "path": ["data"],
+              "query": [{ "key": "categoria", "value": "tecnologia" }]
+            },
+            "description": "Deve retornar 403 — consumidor não pode deletar."
+          }
+        },
+        {
+          "name": "Deletar documento por ID (manipulador ✅)",
           "request": {
             "method": "DELETE",
             "header": [{ "key": "X-User-ID", "value": "{{manipulador_id}}" }],

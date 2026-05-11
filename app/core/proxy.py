@@ -70,6 +70,22 @@ class DatabaseProxy:
             UserLogger(user_id).log("delete", "denied", reason=str(e))
             raise
 
+    def delete_many(self, user_id, query):
+        try:
+            user = self._authenticate_user(user_id)
+            self._check_permission(user, "delete")
+            all_data = self.db.read()
+            matching = RegexORM.find(all_data, query)
+            ids_to_delete = [doc["_id"] for doc in matching]
+            deleted_count = self.db.delete_many(ids_to_delete)
+            UserLogger(user_id).log(
+                "delete_many", "success", query=query, deleted_count=deleted_count
+            )
+            return deleted_count
+        except PermissionError as e:
+            UserLogger(user_id).log("delete_many", "denied", reason=str(e))
+            raise
+
     def read_log(self, user_id):
         self._authenticate_user(user_id)
         return UserLogger(user_id).read()

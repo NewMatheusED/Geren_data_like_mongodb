@@ -63,3 +63,13 @@ class MongoStyleDatabase:
                 self._write_file(new_db_data)
                 return True
             return False
+
+    def delete_many(self, doc_ids: list):
+        with self._lock:
+            db_data = self._read_file()
+            ids_set = set(doc_ids)
+            new_db_data = [doc for doc in db_data if doc.get("_id") not in ids_set]
+            deleted_count = len(db_data) - len(new_db_data)
+            if deleted_count > 0:
+                self._write_file(new_db_data)
+            return deleted_count
