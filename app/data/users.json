@@ -8,5 +8,15 @@
         "nome": "Jo\u00e3o",
         "role": "consumidor",
         "_id": "d04ce73c-c15c-4d13-ad71-0fe24ee14249"
+    },
+    {
+        "nome": "Matheus",
+        "role": "manipulador",
+        "_id": "4feb1700-c22a-4a8f-a370-6721cfb68b3d"
+    },
+    {
+        "nome": "Joao",
+        "role": "consumidor",
+        "_id": "62aa5949-e01a-4d16-bbd2-1f62794dc2c8"
     }
 ]

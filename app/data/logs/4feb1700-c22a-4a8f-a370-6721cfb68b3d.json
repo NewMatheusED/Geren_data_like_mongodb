@@ -1,0 +1,71 @@
+[
+    {
+        "timestamp": "2026-05-11T23:22:13.529332+00:00",
+        "action": "register",
+        "status": "success",
+        "nome": "Matheus",
+        "role": "manipulador",
+        "_id": "766846f2-c861-46f3-b359-4aa3f456e471"
+    },
+    {
+        "timestamp": "2026-05-11T23:22:21.389174+00:00",
+        "action": "insert",
+        "status": "success",
+        "doc_id": "afd3a3da-b260-471a-9ba5-29096557271c",
+        "_id": "55dc2d1d-7c42-43b5-a9aa-4c08eb0338fb"
+    },
+    {
+        "timestamp": "2026-05-11T23:22:21.623665+00:00",
+        "action": "insert",
+        "status": "success",
+        "doc_id": "f7cf7341-c9fc-4f4f-9bda-6194d7c2d864",
+        "_id": "e521da70-a0c1-458a-85d4-3c914656798d"
+    },
+    {
+        "timestamp": "2026-05-11T23:22:21.855829+00:00",
+        "action": "insert",
+        "status": "success",
+        "doc_id": "b35ceae7-1cf1-4f22-a4d5-aaed4ffbc713",
+        "_id": "f488d640-403c-462d-bc82-99353c5a651d"
+    },
+    {
+        "timestamp": "2026-05-11T23:22:28.420736+00:00",
+        "action": "read",
+        "status": "success",
+        "query": "all",
+        "_id": "3d71540e-90e1-4bcc-9392-0e32357f71b8"
+    },
+    {
+        "timestamp": "2026-05-11T23:22:28.639520+00:00",
+        "action": "read",
+        "status": "success",
+        "query": {
+            "categoria": "tecnologia"
+        },
+        "_id": "7650aa4c-e6ef-4f21-b699-72d7668af20c"
+    },
+    {
+        "timestamp": "2026-05-11T23:22:36.218194+00:00",
+        "action": "update",
+        "status": "success",
+        "doc_id": "b35ceae7-1cf1-4f22-a4d5-aaed4ffbc713",
+        "_id": "59a3b198-7938-4936-9475-ccb980ecd965"
+    },
+    {
+        "timestamp": "2026-05-11T23:22:36.447054+00:00",
+        "action": "delete",
+        "status": "success",
+        "doc_id": "afd3a3da-b260-471a-9ba5-29096557271c",
+        "_id": "ed6203cb-8fb3-4ebe-ac8a-7dc8a0f3f733"
+    },
+    {
+        "timestamp": "2026-05-11T23:22:36.682804+00:00",
+        "action": "delete_many",
+        "status": "success",
+        "query": {
+            "categoria": "tecnologia"
+        },
+        "deleted_count": 2,
+        "_id": "04185367-8758-4b78-bccf-ca77bce56de2"
+    }
+]

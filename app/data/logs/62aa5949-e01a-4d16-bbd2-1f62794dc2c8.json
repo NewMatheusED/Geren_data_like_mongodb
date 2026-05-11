@@ -1,0 +1,17 @@
+[
+    {
+        "timestamp": "2026-05-11T23:22:13.763106+00:00",
+        "action": "register",
+        "status": "success",
+        "nome": "Joao",
+        "role": "consumidor",
+        "_id": "700374d6-0ab9-4ca7-86d6-a0fe7acab83c"
+    },
+    {
+        "timestamp": "2026-05-11T23:23:50.315664+00:00",
+        "action": "insert",
+        "status": "denied",
+        "reason": "Acesso Negado: 'consumidor' n\u00e3o pode executar 'insert'.",
+        "_id": "4b0aec37-70c7-424e-9112-c79efcd61a33"
+    }
+]
