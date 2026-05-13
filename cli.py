@@ -1,3 +1,4 @@
+import shlex
 import sys
 
 import click
@@ -302,5 +303,56 @@ def logs(u):
         sys.exit(1)
 
 
+def repl():
+    click.echo(
+        click.style("\n  ╔══════════════════════════════╗", fg="cyan", bold=True)
+    )
+    click.echo(click.style("  ║          🗄  MongoDB          ║", fg="cyan", bold=True))
+    click.echo(click.style("  ╚══════════════════════════════╝", fg="cyan", bold=True))
+    click.echo(
+        click.style("  Digite '--help' para ver os comandos.", fg="bright_black")
+    )
+    click.echo(click.style("  Digite 'exit' ou 'quit' para sair.\n", fg="bright_black"))
+
+    while True:
+        try:
+            line = input(click.style("db> ", fg="cyan", bold=True))
+            line = line.strip()
+
+            if not line:
+                continue
+
+            if line.lower() in ("exit", "quit"):
+                click.echo(click.style("\n  Até logo! 👋\n", fg="cyan"))
+                break
+
+            try:
+                args = shlex.split(line)
+            except ValueError as e:
+                err(f"Erro ao parsear comando: {e}")
+                continue
+
+            try:
+                cli.main(args, standalone_mode=False)
+            except click.exceptions.UsageError as e:
+                err(str(e))
+            except click.exceptions.Exit:
+                pass
+            except SystemExit:
+                pass
+            except Exception as e:
+                err(f"Erro inesperado: {e}")
+
+        except (KeyboardInterrupt, EOFError):
+            click.echo()
+            click.echo(click.style("\n  Até logo!\n", fg="cyan"))
+            break
+
+
 if __name__ == "__main__":
-    cli()
+    if len(sys.argv) > 1:
+        # Modo normal: python cli.py users list ...
+        cli()
+    else:
+        # Modo interativo: python cli.py
+        repl()
